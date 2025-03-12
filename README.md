@@ -19,6 +19,10 @@ This project requires users to bring their own key (**BYOK**) for AI services, w
 
 - [Azure AI multi-service resource](https://learn.microsoft.com/en-us/azure/ai-services/multi-service-resource?pivots=azportal#create-a-new-azure-ai-services-resource), specifically, we will be using Document Intelligence and Azure Language Services from this resource.
 
+- Azure Portal : [Create a Storage Account](https://learn.microsoft.com/en-us/azure/storage/common/storage-account-create?tabs=azure-portal).
+
+- Optionally, [download Azure Storage Explorer](https://azure.microsoft.com/en-us/products/storage/storage-explorer/#Download-4) to manage the storage account from your desktop.
+
 - Optionally, [download Visual Studio Code](https://code.visualstudio.com/download) for free and  install [Azure Functions Core Tools](https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=windows%2Cisolated-process%2Cnode-v4%2Cpython-v2%2Chttp-trigger%2Ccontainer-apps&pivots=programming-language-csharp) if you plan to edit [User Data Functions](https://blog.fabric.microsoft.com/en-us/blog/10474/) using Visual Studio Code.
 
 ## Dataset
@@ -57,7 +61,7 @@ font-size:15px">**datamart**<span>.
      - In the Home menu, click **Manage Connections** and then click "+ Add data connection".
      - From the **OneLake catalog** select _datamart_ (SQL Database) and then click "Connect".
      - Repeat the previous step to add _blob_filestorage_ (Lakehouse) as a managed connection.
-   - Click  **Library management**, and add the following dependencies _(Click "+ Add from PyPI to add the dependencies")_.
+   - Click  **Library management**, and add the following dependencies _(Click "+ Add from PyPI to add the dependencies")_.The dependencies are also listed in _/functions/requirements.txt_ file of the cloned repository
    ![Add Managed Connection & Dependencies](/content/image-3.png)
    - Copy  the content of the file _function\file_processor.py_ from the cloned repository and paste it into the function editor.
    - Click "Publsh" to deploy the function. Once the functions are deployed, click "Refresh".
