@@ -27,7 +27,7 @@ This project requires users to bring their own key (**BYOK**) for AI services, w
 
 ## Dataset
 
-Considering the  [file formats supported by the Document Intelligence Service](https://learn.microsoft.com/en-us/azure/ai-services/document-intelligence/prebuilt/general-document?view=doc-intel-3.1.0#input-requirements), we will be using the PDF files from [Resume Dataset](https://www.kaggle.com/datasets/snehaanbhawal/resume-dataset) from Kaggle.
+Considering the  [file formats supported by the Document Intelligence Service](https://learn.microsoft.com/en-us/azure/ai-services/document-intelligence/prebuilt/general-document?view=doc-intel-3.1.0#input-requirements), we will utilize the PDF files from [Resume Dataset](https://www.kaggle.com/datasets/snehaanbhawal/resume-dataset) from Kaggle.
 
 
 ## Steps
@@ -111,10 +111,22 @@ font-size:15px">**datamart**<span>.
     
    ![Save alert](/content/image-6.png)
 
-    Now that we have setup the stream, it's time to define the _blob_ingest_pipeline_ by adding activities using the Activities tab. Each time you create and configure an activity, remember to save your work by clicking on the **save button** under the **home tab**.
+    Now that we have setup the stream, it's time to define the _blob_ingest_pipeline_.
+    
+   ## Pipeline Definition
+   Pipeline can be defined in two distinct ways as outlined below,
+   ### Import Template
+   Templates offer a quick way to begin building data pipelines. Importing a template includes all necessary activities for orchestrating a pipeline.
 
-
-   <span style="color:Gray;font-weight:700 font-size:20px">**Pipeline Definition**<span> 
+   To import a template,
+   - Navigate to the **Home menu** of the data pipeline.
+   - Click, **Use a template**
+   - From the **Pipeline templates** page click **Import template**.
+   - Import the file _template/ AI-Develop RAG pipeline using SQL database in Fabric.zip_ from the cloned repository.
+    ![Save alert](/content/template02.png)
+   - The data pipeline imported will have some activities with preconfigured settings, while for others, it is necessary to manually enter configuration values as described in the [Blank Canvas](#blank-canvas) approach.
+   
+   ### Blank Canvas
 
    1. Add a **Notebook activity**. The notebook associated with this activity utilizes [NotebookUtils](https://learn.microsoft.com/en-us/fabric/data-engineering/notebook-utilities) to manage file system. During the execution of the notebook, a folder corresponding to the container name will be created if it does not exist. Subsequently, the file will be copied from Azure Blob Storage to the Lakehouse folder. Configure this activity as outlined below:
 
@@ -336,7 +348,6 @@ font-size:15px">**datamart**<span>.
 
         Return to the main canvas by clicking the pipeline name _blob_ingest_pipeline_ and use the **On Success** connector of the **If Condition activity** to link to the subsequent Function _(Create Database Objects)_ activity.
 
-
     9. Add a [**Functions activity**](https://learn.microsoft.com/en-us/fabric/data-factory/functions-activity). The function _create_table_ associated with this activity executes a SQL command to create a documents table within the previously created _datamart_, SQL Database.Configure this activity as outlined below : 
         - General Tab,
             - Name: _Create Database Objects_
@@ -363,3 +374,31 @@ font-size:15px">**datamart**<span>.
             - Name: _data_ 
                 - Type: _list_
                 - Value: _@activity(Generate Embeddings').output.output_
+
+## Pipeline in Action
+  Let's put everything we have done so far into perspective and see the pipeline in action.
+
+- Upload a PDF file,
+  - Use the Azure Storage Explorer or alternatively Azure Portal and create a Blob container named _resume_.
+  - Upload a PDF file from the Kaggle dataset.
+
+  ![Create a Container and Upload a PDF File](/content/explorer.png)
+
+- Pipeline execution review,
+  - From the pipeline’s “Run” menu, select **View run history** and select the recent pipeline run.
+  - In the details view, check to see if the status is **Succeeded** 
+  - In case of a Failure, try to **Rerun** the pipeline using the rerun option.
+
+  ![Pipeline Review](/content/pipelinerun.png)
+
+- Review Lakehouse,
+  - A folder with the same name as that of the container _(resume)_ is created.
+  - The PDF file is copied from Azure Blob Storage to the Lakehouse files.
+  
+  ![Lakehouse Review](/content/lakehouse.png)
+
+- Review Database
+  - The document table should be automatically created by the pipeline.
+  - Redacted chunk data and the embeddings stored in the documents table.
+
+  ![Database Review](/content/data.png)
