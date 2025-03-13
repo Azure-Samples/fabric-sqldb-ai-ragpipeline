@@ -116,7 +116,7 @@ font-size:15px">**datamart**<span>.
    ## Pipeline Definition
    Pipeline can be defined in two distinct ways as outlined below,
    ### Import Template
-   Templates offer a quick way to begin building data pipelines. Importing a template includes all necessary activities for orchestrating a pipeline.
+   Templates offer a quick way to begin building data pipelines. Importing a template brings in all required activities for orchestrating a pipeline.
 
    To import a template,
    - Navigate to the **Home menu** of the data pipeline.
@@ -127,7 +127,7 @@ font-size:15px">**datamart**<span>.
    - The data pipeline imported will have some activities with preconfigured settings, while for others, it is necessary to manually enter configuration values as described in the [Blank Canvas](#blank-canvas) approach.
    
    ### Blank Canvas
-
+    ![Blank Canvas](/content/Blank.png)
    1. Add a **Notebook activity**. The notebook associated with this activity utilizes [NotebookUtils](https://learn.microsoft.com/en-us/fabric/data-engineering/notebook-utilities) to manage file system. During the execution of the notebook, a folder corresponding to the container name will be created if it does not exist. Subsequently, the file will be copied from Azure Blob Storage to the Lakehouse folder. Configure this activity as outlined below:
 
       - General Tab,
