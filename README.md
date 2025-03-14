@@ -62,7 +62,7 @@ font-size:15px">**datamart**<span>.
      - In the Home menu, click **Manage Connections** and then click "+ Add data connection".
      - From the **OneLake catalog** select _datamart_ (SQL Database) and then click "Connect".
      - Repeat the previous step to add _blob_filestorage_ (Lakehouse) as a managed connection.
-   - Click  **Library management**, and add the following dependencies _(Click "+ Add from PyPI to add the dependencies")_.The dependencies are also listed in _/functions/requirements.txt_ file of the cloned repository
+   - Click  **Library management**, and add the following dependencies _(Click "+ Add from PyPI to add the dependencies")_.The dependencies are also listed in _/functions/requirements.txt_ file of the cloned repository.Please ensure that you are utilizing a version of _fabric-user-data-functions_ that is greater than **0.2.28rc0**.
    ![Add Managed Connection & Dependencies](/content/image-3.png)
    - In the function editor, replace existing content with the contents of   _function\function_app.py_ from the cloned repository.
    - Click "Publsh"_(on the top right)_ to deploy the function. Once the functions are deployed, click "Refresh".
@@ -378,7 +378,7 @@ font-size:15px">**datamart**<span>.
             **Parameters:**
             - Name: _data_ 
                 - Type: _list_
-                - Value: _@activity(Generate Embeddings').output.output_
+                - Value: _@activity('Generate Embeddings').output.output_
 ## Troubleshooting
 
 - When adding a Python library from PyPI to User Data Functions, you might notice an error, such as a wiggly line under the library name (e.g., _azure-ai-textanalytics_), like a spelling mistake. Users should ensure the library name is spelled correctly and then ignore the error by tabbing out to the Version dropdown and selecting the correct version. This transient error should resolve itself.
