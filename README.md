@@ -17,9 +17,9 @@ This project requires users to bring their own key (**BYOK**) for AI services, w
 
 - Azure OpenAI Resource: [Deploy an embedding model](https://learn.microsoft.com/en-us/azure/ai-foundry/how-to/deploy-models-openai) (e.g. text-emebdding-3-small).
 
-- [Azure AI multi-service resource](https://learn.microsoft.com/en-us/azure/ai-services/multi-service-resource?pivots=azportal#create-a-new-azure-ai-services-resource), specifically, we will be using Document Intelligence and Azure Language Services from this resource.
+- [Azure AI multi-service resource](https://learn.microsoft.com/en-us/azure/ai-services/content-understanding/how-to/create-multi-service-resource), specifically, we will be using Document Intelligence and Azure Language Services from this resource.
 
-- Azure Portal : [Create a Storage Account](https://learn.microsoft.com/en-us/azure/storage/common/storage-account-create?tabs=azure-portal).
+- Azure Portal : [Create a Storage Account](https://learn.microsoft.com/en-us/azure/storage/common/storage-account-create?tabs=azure-portal) and [assign Storage Blob Data Contributor role](https://learn.microsoft.com/en-us/azure/storage/blobs/assign-azure-role-data-access?tabs=portal).
 
 - Optionally, [download Azure Storage Explorer](https://azure.microsoft.com/en-us/products/storage/storage-explorer/#Download-4) to manage the storage account from your desktop.
 
@@ -42,18 +42,19 @@ font-size:15px">**blob_filestorage**<span>.
 3.	[Create SQL Database in Fabric](https://learn.microsoft.com/en-us/fabric/database/sql/create) named  <span style="color:lightblue;font-weight:700
 font-size:15px">**datamart**<span>.
 
-4. Import the notebook _cp_azblob_lakehouse.ipynb_ from the cloned repository’s notebook folder.
+4. Navigate to the workspace _IntelligentApp_, click Import - Notebook - From this computer and then import the notebook _cp_azblob_lakehouse.ipynb_ from the cloned repository’s notebook folder.
    ![Import Notebook](/content/image-2.png)
 
 
 5. Attach the Lakehouse blob_filestorage to cp_azblob_lakehouse notebook
    - Open the notebook, on the Explorer click "+ Data Source".
    - Select "existing lakehouse(s) without Schema.
-   - Select "blob_filestorage" from OneLake catalog and then click "Connect".
+   - Select "blob_filestorage" from OneLake catalog and then click "Add".
    
    ![Attach Lakehouse](/content/image-1.png)
 
 6. Create a User Data Function by clicking on "+ New Item"
+   - Navigate to the _IntelligentApp_ workspace and click **+New item**
    - Search for Function and Select "User data function(s)".
    - Provide the name _file_processor_.
    - Click "New Function".
@@ -63,31 +64,14 @@ font-size:15px">**datamart**<span>.
      - Repeat the previous step to add _blob_filestorage_ (Lakehouse) as a managed connection.
    - Click  **Library management**, and add the following dependencies _(Click "+ Add from PyPI to add the dependencies")_.The dependencies are also listed in _/functions/requirements.txt_ file of the cloned repository
    ![Add Managed Connection & Dependencies](/content/image-3.png)
-   - Copy  the content of the file _function\file_processor.py_ from the cloned repository and paste it into the function editor.
-   - Click "Publsh" to deploy the function. Once the functions are deployed, click "Refresh".
+   - In the function editor, replace existing content with the contents of   _function\function_app.py_ from the cloned repository.
+   - Click "Publsh"_(on the top right)_ to deploy the function. Once the functions are deployed, click "Refresh".
 
 7. Create a Data Pipeline by clicking on "+ New Item"
    - Search and select "Data Pipeline".
    - Provide the name _blob_ingest_pipeline_.
 
-8. Establish pipeline variables. Click on the pipeline canvas, select the **Variables** menu, and then click "+ New" to add the following variables:
-
-    | Name                    | Type    | Value                                                      | Comments                                                   |
-    |-------------------------|---------|------------------------------------------------------------|------------------------------------------------------------|
-    | _fileName_              | String  | _@pipeline()?.TriggerEvent?.FileName_                      |                                                            |
-    |   _container_             | String  | _@pipeline()?.TriggerEvent?.FolderPath_                    |                                                            |
-    | _source_                | String  | _@pipeline()?.TriggerEvent?.Source_                        |                                                            |
-    | _cognitiveServiceEndpoint_ | String  | _https://YOUR-MULTI-SERVICE-ACCOUNT-NAME.cognitiveservices.azure.com/_ | _Replace YOUR-MULTI-SERVICE-ACCOUNT-NAME with the name of your multi-service account_ |
-    | _apiKey_                | String  | _YOUR-MULTI-SERVICE-ACCOUNT-APIKEY_                        | _Replace YOUR-MULTI-SERVICE-ACCOUNT-APIKEY with the apikey of your multi-service account_ |
-    | _openAIEndpoint_        | String  | _https://YOUR-OPENAI-ACCOUNT-NAME.openai.azure.com/_       | _Replace YOUR-OPENAI-ACCOUNT-NAME with the name of your Azure OpenAI Account_ |
-    | _openAIKey_             | String  | _YOUR-OPENAI-APIKEY_                                       | _Replace YOUR-OPENAI-APIKEY with the apikey of your Azure OpenAI Account_ |
-    | _embeddingModel_        | String  | _text-embedding-3-small_                                   |                                                            |
-    | _recepientEmailAddress_ | String  | _to-email-address_                                         |receipeint email address                                                            |
-    | _senderEmailAddress_    | String  | _from-email-address_                                       | sender's email address                                                            |
-
-    ![Configure Pipeline Parameters](/content/image-4.png)
-
-9. Create a Data Pipeline storage trigger by clicking "Add trigger (preview)" button and provide the following configuration : 
+8. Create a Data Pipeline storage trigger by clicking "Add trigger (preview)" button and provide the following configuration : 
 
    - Source: Select _Azure Blob Storage events_.
    - Storage account: Connect to existing Azure Blob Storage account.
@@ -104,7 +88,8 @@ font-size:15px">**datamart**<span>.
    Click "Next" to review the configuration. Then, click "Connect" to connect to the blob storage. A successful connection will be indicated by the status "Successful". Finally, click "Save".
 
    On the Set alert screen, under Save location, configure the following settings,
-
+  
+   - Select, **Create a new item**.
    - New item name: _blob_activator_ 
 
    Click "Create" to create and save the alert. 
@@ -124,18 +109,38 @@ font-size:15px">**datamart**<span>.
    - From the **Pipeline templates** page click **Import template**.
    - Import the file _template/ AI-Develop RAG pipeline using SQL database in Fabric.zip_ from the cloned repository.
     ![Save alert](/content/template02.png)
-   - The data pipeline imported will have some activities with preconfigured settings, while for others, it is necessary to manually enter configuration values as described in the [Blank Canvas](#blank-canvas) approach.
+
+   The imported data pipeline is preloaded with all necessary activities, variables, and connectors required for end-to-end orchestration. Consequently, there is **no need to manually add a variable or an activity**. Instead, you can proceed directly to configuring values for the variables and each activity parameter in the pipeline, as detailed in the  [Blank Canvas](#blank-canvas) section.
    
    ### Blank Canvas
-    ![Blank Canvas](/content/Blank.png)
-   1. Add a **Notebook activity**. The notebook associated with this activity utilizes [NotebookUtils](https://learn.microsoft.com/en-us/fabric/data-engineering/notebook-utilities) to manage file system. During the execution of the notebook, a folder corresponding to the container name will be created if it does not exist. Subsequently, the file will be copied from Azure Blob Storage to the Lakehouse folder. Configure this activity as outlined below:
+   1. Establish pipeline variables. Click on the pipeline canvas, select the **Variables** menu, and then click "+ New" to add and configure values for the following variables:
+
+      ![Configure Pipeline Parameters](/content/image-4.png)
+
+      | Name                    | Type    | Value                                                      | Comments                                                   |
+      |-------------------------|---------|------------------------------------------------------------|------------------------------------------------------------|
+      | _fileName_              | String  | _@pipeline()?.TriggerEvent?.FileName_                      |                                                            |
+      |   _container_             | String  | _@pipeline()?.TriggerEvent?.FolderPath_                    |                                                            |
+      | _source_                | String  | _@pipeline()?.TriggerEvent?.Source_                        |                                                            |
+      | _cognitiveServiceEndpoint_ | String  | _https://YOUR-MULTI-SERVICE-ACCOUNT-NAME.cognitiveservices.azure.com/_ | _Replace YOUR-MULTI-SERVICE-ACCOUNT-NAME with the name of your multi-service account_ |
+      | _apiKey_                | String  | _YOUR-MULTI-SERVICE-ACCOUNT-APIKEY_                        | _Replace YOUR-MULTI-SERVICE-ACCOUNT-APIKEY with the apikey of your multi-service account_ |
+      | _openAIEndpoint_        | String  | _https://YOUR-OPENAI-ACCOUNT-NAME.openai.azure.com/_       | _Replace YOUR-OPENAI-ACCOUNT-NAME with the name of your Azure OpenAI Account_ |
+      | _openAIKey_             | String  | _YOUR-OPENAI-APIKEY_                                       | _Replace YOUR-OPENAI-APIKEY with the apikey of your Azure OpenAI Account_ |
+      | _embeddingModel_        | String  | _text-embedding-3-small_                                   |                                                            |
+      | _recepientEmailAddress_ | String  | _to-email-address_                                         |receipeint email address                                                            |
+      | _senderEmailAddress_    | String  | _from-email-address_                                       | sender's email address                                                            |
+
+      ![Configure Pipeline Parameters](/content/cognitiveservice.png)
+   2. Add a **Notebook activity**. The notebook associated with this activity utilizes [NotebookUtils](https://learn.microsoft.com/en-us/fabric/data-engineering/notebook-utilities) to manage file system. During the execution of the notebook, a folder corresponding to the container name will be created if it does not exist. Subsequently, the file will be copied from Azure Blob Storage to the Lakehouse folder. Configure this activity as outlined below:
 
       - General Tab,
         - Name: _azureblob_to_lakehouse_
       - Settings Tab,
         - Notebook: _cp_azblob_lakehouse_
 
-            Click "+New" to add the following **Base parameters**,
+        **Base parameters**
+
+          Click "+New" to add the following _parameters_,
         - Name: _fileName_ 
           - Type: _String_
 	      - Value: _@variables('fileName')_
@@ -148,7 +153,7 @@ font-size:15px">**datamart**<span>.
 
        Use **On Success** connector of the activity to link to the subsequent function _(Extract Text)_ activity.
 
-    2. Add a [**Functions activity**](https://learn.microsoft.com/en-us/fabric/data-factory/functions-activity). The function _extract_text_ associated with this activity uses [Azure AI Document Intelligence service](https://azure.microsoft.com/en-us/products/ai-services/ai-document-intelligence) to extract the "text" content from the file copied into the Lakehouse by the previous activity.Configure this activity as outlined below : 
+    3. Add a [**Functions activity**](https://learn.microsoft.com/en-us/fabric/data-factory/functions-activity). The function _extract_text_ associated with this activity uses [Azure AI Document Intelligence service](https://azure.microsoft.com/en-us/products/ai-services/ai-document-intelligence) to extract the "text" content from the file copied into the Lakehouse by the previous activity.Configure this activity as outlined below : 
 
         - General Tab,
             - Name: _Extract Text_
@@ -172,40 +177,40 @@ font-size:15px">**datamart**<span>.
 
         Use **On Completion** connector of the activity to link to the subsequent If Condition _(Text Extraction Results)_ activity.
 
-      3. Add an **If Conditions activity** to verify the success of the text extraction in the previous step.If the extraction was unsuccessful, an email would be sent to the configured recepient and the pipeline would be terminated.Configure this activity as outlined below:
+    4. Add an **If Conditions activity** to verify the success of the text extraction in the previous step.If the extraction was unsuccessful, an email would be sent to the configured recepient and the pipeline would be terminated.Configure this activity as outlined below:
 
-         - General Tab,
-           - Name: _Text Extraction Results_
-         - Activities Tab,
-           - Expression: _@empty(activity('Extract Text').error)_
-           - Case: **False**. Edit the _false_ condition using the **edit (pencil) icon**, and add the following activities,
+        - General Tab,
+          - Name: _Text Extraction Results_
+        - Activities Tab,
+          - Expression: _@empty(activity('Extract Text').error)_
+          - Case: **False**. Edit the _false_ condition using the **edit (pencil) icon**, and add the following activities,
 
-             **Office 365 Outlook activity**: To send alert emails.
-             - General Tab,
-               - Name: _Text Extraction Failure Email Alert_
-             - Settings Tab,
-               - Signed in as: Sign-in (if not already) using your workspace credentials.
-               - To:_@variables('recepientEmailAddress')_
-               - Subject:_Text Extraction Error_
-               - Body:_&lt;pre&gt;@{replace(string(activity('Extract Text').error.message), '\\','')}&lt;/pre&gt;_
+            **Office 365 Outlook activity**: To send alert emails.
+            - General Tab,
+              - Name: _Text Extraction Failure Email Alert_
+            - Settings Tab,
+              - Signed in as: Sign-in (if not already) using your workspace credentials.
+              - To:_@variables('recepientEmailAddress')_
+              - Subject:_Text Extraction Error_
+              - Body:_&lt;pre&gt;@{replace(string(activity('Extract Text').error.message), '\\','')}&lt;/pre&gt;_
 
-               **Advanced**,
-               - From: _@variables('senderEmailAddress')_
-               - Importance: _High_
+              **Advanced**,
+              - From: _@variables('senderEmailAddress')_
+              - Importance: _High_
 
-               Use On **Success connector** of the activity to link to the subsequent Fail     activity.
+              Use On **Success connector** of the activity to link to the subsequent Fail     activity.
 
-             **Fail activity**: To terminate the pipeline
-              - General Tab,
-                - Name: _Text Extraction Process Failure_
-              - Settings Tab,
-                - Fail message: _@{replace(string(activity('Extract Text').error), '\\','')}_
-                - Error code: _@{activity('Extract Text').statuscode}_
+            **Fail activity**: To terminate the pipeline
+            - General Tab,
+              - Name: _Text Extraction Process Failure_
+            - Settings Tab,
+              - Fail message: _@{replace(string(activity('Extract Text').error), '\\','')}_
+              - Error code: _@{activity('Extract Text').statuscode}_
 
-         Return to the main canvas by clicking the pipeline name _blob_ingest_pipeline_ and use the **On Success** connector of the **If Condition activity** to link to the subsequent Function _(Generate Chunks)_ activity.
+        Return to the main canvas by clicking the pipeline name _blob_ingest_pipeline_ and use the **On Success** connector of the **If Condition activity** to link to the subsequent Function _(Generate Chunks)_ activity.
 
 
-    4. Add a [**Functions activity**](https://learn.microsoft.com/en-us/fabric/data-factory/functions-activity). The function _chunk_text_ associated with this activity uses [tiktoken tokenizer](https://github.com/openai/tiktoken) to "generate chunks" for the text extracted by the previous activity.Configure this activity as outlined below : 
+    5. Add a [**Functions activity**](https://learn.microsoft.com/en-us/fabric/data-factory/functions-activity). The function _chunk_text_ associated with this activity uses [tiktoken tokenizer](https://github.com/openai/tiktoken) to "generate chunks" for the text extracted by the previous activity.Configure this activity as outlined below : 
 
         - General Tab,
             - Name: _Generate Chunks_
@@ -229,7 +234,7 @@ font-size:15px">**datamart**<span>.
 
         Use **On Success** connector of the activity to link to the subsequent Function _(Redact PII Data)_ activity.
 
-    5. Add a [**Functions activity**](https://learn.microsoft.com/en-us/fabric/data-factory/functions-activity). The function _redact_text_ associated with this activity uses [Azure AI Language service](https://learn.microsoft.com/en-us/azure/ai-services/language-service/overview) to "Redact PII Data" for the chunks generated by the preceding activity. The chunking of text is done prior to redaction to comply with the [service limits requirements](https://learn.microsoft.com/en-us/azure/ai-services/language-service/concepts/data-limits) for the PII detection feature.Configure this activity as outlined below : 
+    6. Add a [**Functions activity**](https://learn.microsoft.com/en-us/fabric/data-factory/functions-activity). The function _redact_text_ associated with this activity uses [Azure AI Language service](https://learn.microsoft.com/en-us/azure/ai-services/language-service/overview) to "Redact PII Data" for the chunks generated by the preceding activity. The chunking of text is done prior to redaction to comply with the [service limits requirements](https://learn.microsoft.com/en-us/azure/ai-services/language-service/concepts/data-limits) for the PII detection feature.Configure this activity as outlined below : 
 
         - General Tab,
             - Name: _Redact PII Data_
@@ -255,7 +260,7 @@ font-size:15px">**datamart**<span>.
         
         Use **On Completion** connector of the activity to link to the subsequent If Condition _(PII Redaction Results)_ activity.
        
-      6. Add an **If Conditions activity** to verify the success of the PII redaction in the previous step. If the redaction was unsuccessful, an email would be sent to the configured recipient, and the pipeline would be terminated.Configure this activity as outlined below:
+      7. Add an **If Conditions activity** to verify the success of the PII redaction in the previous step. If the redaction was unsuccessful, an email would be sent to the configured recipient, and the pipeline would be terminated.Configure this activity as outlined below:
 
          - General Tab,
            - Name: _PII Reaction Results_
@@ -287,7 +292,7 @@ font-size:15px">**datamart**<span>.
 
          Return to the main canvas by clicking the pipeline name _blob_ingest_pipeline_ and use the **On Success** connector of the **If Condition activity** to link to the subsequent Function _(Generate Embeddings)_ activity.
 
-    7. Add a [**Functions activity**](https://learn.microsoft.com/en-us/fabric/data-factory/functions-activity). The function _generate_embeddings_ associated with this activity uses [Azure Open AI Service](https://azure.microsoft.com/en-us/products/ai-services/openai-service?msockid=2c16c7c6d6bd62c139b9d347d7c86394) embedding model to convert the redacted chunks into embeddings.Configure this activity as outlined below : 
+    8. Add a [**Functions activity**](https://learn.microsoft.com/en-us/fabric/data-factory/functions-activity). The function _generate_embeddings_ associated with this activity uses [Azure Open AI Service](https://azure.microsoft.com/en-us/products/ai-services/openai-service?msockid=2c16c7c6d6bd62c139b9d347d7c86394) embedding model to convert the redacted chunks into embeddings.Configure this activity as outlined below : 
         - General Tab,
             - Name: _Generate Embeddings_
         - Settings Tab,
@@ -316,7 +321,7 @@ font-size:15px">**datamart**<span>.
         
         Use **On Completion** connector of the activity to link to the subsequent If Condition _(Generate Embeddings Results)_ activity.
 
-    8. Add an **If Conditions activity** activity to verify the success of the Generate Embeddings in the previous step. If the embeddings generation were unsuccessful, an email would be sent to the configured recipient, and the pipeline would be terminated.Configure this activity as outlined below:
+    9. Add an **If Conditions activity** activity to verify the success of the Generate Embeddings in the previous step. If the embeddings generation were unsuccessful, an email would be sent to the configured recipient, and the pipeline would be terminated.Configure this activity as outlined below:
 
         - General Tab,
           - Name: _Generate Embeddings Results_
@@ -348,7 +353,7 @@ font-size:15px">**datamart**<span>.
 
         Return to the main canvas by clicking the pipeline name _blob_ingest_pipeline_ and use the **On Success** connector of the **If Condition activity** to link to the subsequent Function _(Create Database Objects)_ activity.
 
-    9. Add a [**Functions activity**](https://learn.microsoft.com/en-us/fabric/data-factory/functions-activity). The function _create_table_ associated with this activity executes a SQL command to create a documents table within the previously created _datamart_, SQL Database.Configure this activity as outlined below : 
+    10. Add a [**Functions activity**](https://learn.microsoft.com/en-us/fabric/data-factory/functions-activity). The function _create_table_ associated with this activity executes a SQL command to create a documents table within the previously created _datamart_, SQL Database.Configure this activity as outlined below : 
         - General Tab,
             - Name: _Create Database Objects_
         - Settings Tab,
@@ -360,7 +365,7 @@ font-size:15px">**datamart**<span>.
         
         Use **On Success** connector of the activity to link to the subsequent If Condition _(Generate Embeddings Results)_ activity.
 
-    10. Add a [**Functions activity**](https://learn.microsoft.com/en-us/fabric/data-factory/functions-activity). The function “insert_data” associated with this activity executes a SQL command to bulk insert rows in the documents table created in the previous activity.Configure this activity as outlined below : 
+    11. Add a [**Functions activity**](https://learn.microsoft.com/en-us/fabric/data-factory/functions-activity). The function “insert_data” associated with this activity executes a SQL command to bulk insert rows in the documents table created in the previous activity.Configure this activity as outlined below : 
         - General Tab,
             - Name: _Save Data_
         - Settings Tab,
@@ -374,6 +379,9 @@ font-size:15px">**datamart**<span>.
             - Name: _data_ 
                 - Type: _list_
                 - Value: _@activity(Generate Embeddings').output.output_
+## Troubleshooting
+
+- When adding a Python library from PyPI to User Data Functions, you might notice an error, such as a wiggly line under the library name (e.g., _azure-ai-textanalytics_), like a spelling mistake. Users should ensure the library name is spelled correctly and then ignore the error by tabbing out to the Version dropdown and selecting the correct version. This transient error should resolve itself.
 
 ## Pipeline in Action
   Let's put everything we have done so far into perspective and see the pipeline in action.
