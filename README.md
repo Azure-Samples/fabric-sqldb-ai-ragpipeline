@@ -62,7 +62,7 @@ font-size:15px">**datamart**<span>.
      - In the Home menu, click **Manage Connections** and then click "+ Add data connection".
      - From the **OneLake catalog** select _datamart_ (SQL Database) and then click "Connect".
      - Repeat the previous step to add _blob_filestorage_ (Lakehouse) as a managed connection.
-   - Click  **Library management**, and add the following dependencies _(Click "+ Add from PyPI to add the dependencies")_.The dependencies are also listed in _/functions/requirements.txt_ file of the cloned repository.Please ensure that you are utilizing a version of _fabric-user-data-functions_ that is greater than **0.2.28rc0**.
+   - Click  **Library management**, and add the following dependencies _(Click "+ Add from PyPI to add the dependencies")_.The dependencies are also listed in _/functions/requirements.txt_ file of the cloned repository.Ensure you are using  _fabric-user-data-functions_ version **0.2.28rc0** or higher.
    ![Add Managed Connection & Dependencies](/content/image-3.png)
    - In the function editor, replace existing content with the contents of   _function\function_app.py_ from the cloned repository.
    - Click "Publsh"_(on the top right)_ to deploy the function. Once the functions are deployed, click "Refresh".
