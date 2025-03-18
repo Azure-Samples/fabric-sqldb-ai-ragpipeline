@@ -47,13 +47,13 @@ font-size:15px">**datamart**<span>.
 
 
 5. Attach the Lakehouse blob_filestorage to cp_azblob_lakehouse notebook
-   - Open the notebook, on the Explorer click "+ Data Source".
-   - Select "existing lakehouse(s) without Schema.
-   - Select "blob_filestorage" from OneLake catalog and then click "Add".
+   - Open the notebook, on the Explorer click **Add sources**.
+   - Select _Existing data sources_.
+   - Select _blob_filestorage_ from OneLake catalog and then click _Connect_.
    
-   ![Attach Lakehouse](/content/image-1.png)
+   ![Attach Lakehouse](/content/Lakehouse02.png)
 
-6. Create a User Data Function by clicking on "+ New Item"
+6. Create a User Data Function 
    - Navigate to the _IntelligentApp_ workspace and click **+New item**
    - Search for Function and Select "User data function(s)".
    - Provide the name _file_processor_.
@@ -67,7 +67,7 @@ font-size:15px">**datamart**<span>.
    - In the function editor, replace existing content with the contents of   _function\function_app.py_ from the cloned repository.
    - Click "Publsh"_(on the top right)_ to deploy the function. Once the functions are deployed, click "Refresh".
 
-7. Create a Data Pipeline by clicking on "+ New Item"
+7. Create a Data Pipeline by navigating to the workspace and then clicking on "+ New  Item"
    - Search and select "Data Pipeline".
    - Provide the name _blob_ingest_pipeline_.
 
