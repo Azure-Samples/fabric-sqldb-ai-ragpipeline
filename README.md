@@ -383,6 +383,8 @@ font-size:15px">**datamart**<span>.
 
 - When adding a Python library from PyPI to User Data Functions, you might notice an error, such as a wiggly line under the library name (e.g., _azure-ai-textanalytics_), like a spelling mistake. Users should ensure the library name is spelled correctly and then ignore the error by tabbing out to the Version dropdown and selecting the correct version. This transient error should resolve itself.
 
+- The imported pipeline reportedly doesn't seem to preload with the parameter values. For each activity in the pipeline, ensure that the parameter values are provided and correct. Refer to the **Blank Canvas** section for the required parameters and their values. 
+
 ## Execute Pipeline (Pipeline in Action)
   Let's put everything we have done so far into perspective and see the pipeline in action.
 
