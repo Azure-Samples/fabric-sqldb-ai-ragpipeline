@@ -1,0 +1,11 @@
+"mcp": {
+
+       "servers": {
+           "graphql-mcp": {
+                "command": "python",
+                "args": [
+                    "<<replace with path to your mcp_graphql.py file>>"
+                ]
+            }
+        }
+    }
