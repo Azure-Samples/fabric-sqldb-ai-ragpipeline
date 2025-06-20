@@ -505,6 +505,6 @@ Share the candidates profile (link) with a short description, why they are a goo
 ![Agent in Action](/content/chef.gif)
 
 
-"Looking for a fullstack developer from Alabama"
+_"Looking for a fullstack developer from Alabama"_
 
 ![Agent in Action](/content/fullstack.gif)
