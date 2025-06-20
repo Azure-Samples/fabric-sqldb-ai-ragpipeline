@@ -39,7 +39,7 @@ def execute_graphql_query(endpoint, query, variables):
 def get_resumes(search_query: str, top: int, candidateLocation: Optional[str] = None) -> str:
     """Retrieve the matching contextual resumes from the database based on the search query."""
     query = """
-    query executesimilarity_search($top: Int!, $search_query: String!, $candidateLocation: String!) {
+    query executesimilarity_search($top: Int!, $search_query: String!, $candidateLocation: String) {
             executesimilarity_search(top: $top, search_query: $search_query, candidateLocation: $candidateLocation) {
                 DocumentLocation
                 CandidateName

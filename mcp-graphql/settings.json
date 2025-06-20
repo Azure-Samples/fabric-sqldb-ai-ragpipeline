@@ -4,7 +4,7 @@
            "graphql-mcp": {
                 "command": "python",
                 "args": [
-                    "<<replace with path to your mcp_graphql.py file>>"
+                    "<<DIRECTORY_PATH>>"
                 ]
             }
         }

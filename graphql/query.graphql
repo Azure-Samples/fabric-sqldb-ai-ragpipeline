@@ -1,0 +1,12 @@
+#example search candidate resumes
+query{
+    executesimilarity_search(search_query: "senior network engineer", top: 2) {
+        DocumentLocation
+        CandidateName
+        Email
+        PhoneNumber
+        CandidateLocation
+        ChunkText
+        Score        
+    }
+}

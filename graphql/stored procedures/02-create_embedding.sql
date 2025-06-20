@@ -5,7 +5,7 @@ create or alter procedure dbo.create_embeddings
 )
 AS
 BEGIN
-declare @url varchar(max) = 'https://<<AZURE_OPEN_AI_RESOURCE>>.openai.azure.com/openai/deployments/text-embedding-ada-002/embeddings?api-version=2023-05-15';
+declare @url varchar(max) = '<<AZURE_OPEN_AI_ENDPOINT>>/openai/deployments/<<EMBEDDING_MODEL>>/embeddings?api-version=<<API_VERSION>>';
 declare @payload nvarchar(max) = json_object('input': @input_text);
 declare @response nvarchar(max);
 declare @retval int;
@@ -15,7 +15,7 @@ begin try
     exec @retval = sp_invoke_external_rest_endpoint
         @url = @url,
         @method = 'POST',
-        @credential = [https://<<AZURE_OPEN_AI_RESOURCE>>.openai.azure.com/],
+        @credential = [<<AZURE_OPEN_AI_ENDPOINT>>],
         @payload = @payload,
         @response = @response output;
 end try
