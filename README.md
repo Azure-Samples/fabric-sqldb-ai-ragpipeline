@@ -1,3 +1,5 @@
+> 📘 **Note:** If you're looking for a step-by-step guide for building a RAG pipeline with **GraphQL and MCP**, visit [mcp-graphql](/mcp-graphql/README.md)
+
 # RAG Pipeline using SQL Database in Fabric
 
 This project provides step-by-step guidance for building a **Retrieval Augmented Generation (RAG) pipeline** to make your data AI-ready using Microsoft . The RAG pipeline is triggered every time a file is uploaded to Azure Blob Storage. The pipeline processes the file by extracting the textual content, chunking the text, redacting any PII data, generating embeddings, and finally storing the embeddings in a SQL Database in Fabric as a vector store. The stored content can later be utilized to build AI applications such as recommendation engines, chatbots, smart search, etc

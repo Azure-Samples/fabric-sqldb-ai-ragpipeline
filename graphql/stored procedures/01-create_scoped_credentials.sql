@@ -7,9 +7,9 @@ end
 go
 
 -- Create the database scoped credential for Azure OpenAI
-if not exists(select * from sys.database_scoped_credentials where [name] = 'https://<<AZURE_OPEN_AI_RESOURCE>>.openai.azure.com/')
+if not exists(select * from sys.database_scoped_credentials where [name] = '<<AZURE_OPEN_AI_ENDPOINT>>')
 begin
-    create database scoped credential [https://<<AZURE_OPEN_AI_RESOURCE>>.openai.azure.com/]
+    create database scoped credential [<<AZURE_OPEN_AI_ENDPOINT>>]
     with identity = 'HTTPEndpointHeaders', secret = '{"api-key":"<<AZURE_OPEN_AI_API_KEY>>"}';
 end
 go
