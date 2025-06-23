@@ -71,7 +71,7 @@ font-size:15px">**datamart**<span>.
    - Select _Existing data sources_.
    - Select _blob_filestorage_ from OneLake catalog and then click _Connect_.
    
-   ![Attach Lakehouse](/content/Lakehouse02.png)
+   ![Attach Lakehouse](/content/lakehouse02.png)
 
 6. Create a User Data Function 
    - Navigate to the _IntelligentApp_ workspace and click **+New item**
