@@ -3,7 +3,7 @@
     "graphql-mcp": {
       "command": "python",
       "args": [
-        "<<DIRECTORY_PATH>>" 
+        "<<path_to_mcp_graphql_server.py>>" 
       ],
       "description": "A simple MCP server to query documents from SQL Server database in Microsoft Fabric  using Fabric GraphQL."
     }
