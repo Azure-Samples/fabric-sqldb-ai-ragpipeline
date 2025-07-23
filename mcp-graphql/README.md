@@ -241,7 +241,7 @@ font-size:15px">**datamart**<span>.
             - Function: _extract_entities_
 
             **Parameters:**
-            - Name: text_ 
+            - Name: _text_ 
                 - Type: _str_
                 - Value: _@activity('Extract Text').output.output_
 
@@ -366,7 +366,7 @@ font-size:15px">**datamart**<span>.
                 - Type: _list_
                 - Value: _@activity('Generate Embeddings').output.output_
             - Name: _documentLocation_ 
-                - Type: _list_
+                - Type: _str_
                 - Value: _@concat(
                         concat(
                             concat(
@@ -379,23 +379,23 @@ font-size:15px">**datamart**<span>.
                         '/'), 
                         variables('fileName'))_
             - Name: _candidateName_ 
-                - Type: _list_
+                - Type: _str_
                 - Value: _@activity('Extract Entities').output.output.Name_
             - Name: _phoneNumber_ 
-                - Type: _list_
+                - Type: _str_
                 - Value: _@activity('Extract Entities').output.output.PhoneNumber_
             - Name: _email_ 
-                - Type: _list_
+                - Type: _str_
                 - Value: _@activity('Extract Entities').output.output.Email_
             - Name: _candidateLocation_ 
-                - Type: _list_
+                - Type: _str_
                 - Value: _@activity('Extract Entities').output.output.Location_
 ## Execute Pipeline (Pipeline in Action)
   Let's put everything we have done so far into perspective and see the pipeline in action.
 
 - Upload a PDF file,
   - Use the Azure Storage Explorer or alternatively Azure Portal and create a Blob container named _resume_.
-  - Upload a PDF file.
+  - Upload a PDF file from [Resume Dataset](/dataset/resume).
 
   ![Create a Container and Upload a PDF File](/content/explorer.png)
 
